@@ -22,7 +22,7 @@ def get_sales_data():
     """
     while True:
         print("Please enter sales data from the last market.")
-        print("Data should be six number, separated by commas.")
+        print("Data should be six numbers, separated by commas.")
         print("Example: 10,20,30,40,50,60\n")
 
         data_str = input("Enter your data here: ")
@@ -38,15 +38,15 @@ def get_sales_data():
 
 def validate_data(values):
     """
-    Inside the try, coverts all string values into integers.
-    Raises ValueError if strings connot be converted into int,
-    or if there aren't exactly 6 value 
+    Inside the try, converts all string values into integers.
+    Raises ValueError if strings cannot be converted into int,
+    or if there aren't exactly 6 values. 
     """
     try:
         [int(value) for value in values]
         if len(values) != 6:
             raise ValueError(
-                f"Exactly 6 values requeried, you provided {len(values)}"
+                f"Exactly 6 values required, you provided {len(values)}"
             )
     except ValueError as e:
         print(f"Invalid data: {e}, please try again.\n")
@@ -76,7 +76,13 @@ def calculate_surplus_data(sales_row):
     print("Calculating surplus data...\n")
     stock = SHEET.worksheet("stock").get_all_values()
     stock_row = stock[-1]
-    print(stock_row)
+    
+    surplus_data = []
+    for stock, sales in zip(stock_row, sales_row):
+        surplus = int(stock) - sales
+        surplus_data.append(surplus)
+    
+    return surplus_data
 
 
 
@@ -87,7 +93,8 @@ def main():
     data = get_sales_data()
     sales_data = [int(num) for num in data]
     update_sales_worksheet(sales_data)
-    calculate_surplus_data(sales_data)
+    new_surplus_data = calculate_surplus_data(sales_data)
+    print(new_surplus_data)
 
-print("Welcome to Love Sandwiches Data automation")
+print("Welcome to Love Sandwiches Data Automation")
 main()
